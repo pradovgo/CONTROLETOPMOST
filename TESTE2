@@ -1,0 +1,8 @@
+Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As Long, _
+    ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, _
+    ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+Private Declare PtrSafe Function SetForegroundWindow Lib "user32" (ByVal hwnd As Long) As Long
+Private Const HWND_TOPMOST = -1
+Private Const SWP_NOMOVE = &H2
+Private Const SWP_NOSIZE = &H1
+
