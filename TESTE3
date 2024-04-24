@@ -1,0 +1,44 @@
+Option Explicit
+'Written By RobDog888 - VB/Office Guru™
+'Add a Command Button so you can toggle the userform's topmost effect
+Private Declare Function FindWindow Lib "user32.dll" Alias "FindWindowA" ( _
+                    ByVal lpClassName As String, _
+                    ByVal lpWindowName As String) As Long
+                    
+Private Declare Function SetWindowPos Lib "user32" ( _
+                    ByVal hwnd As Long, _
+                    ByVal hWndInsertAfter As Long, _
+                    ByVal X As Long, _
+                    ByVal Y As Long, _
+                    ByVal cx As Long, _
+                    ByVal cy As Long, _
+                    ByVal wFlags As Long) As Long
+
+Private Const HWND_TOPMOST = -1
+Private Const HWND_NOTOPMOST = -2
+Private Const SWP_NOMOVE = &H2
+Private Const SWP_NOSIZE = &H1
+Private mlHwnd As Long
+
+Private Sub CommandButton1_Click()
+    If CommandButton1.Caption = "Not Topmost" Then
+        SetWindowPos mlHwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE
+        CommandButton1.Caption = "Topmost"
+    Else
+        SetWindowPos mlHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE
+        CommandButton1.Caption = "Not Topmost"
+    End If
+End Sub
+
+Private Sub UserForm_Initialize()
+    mlHwnd = FindWindow("ThunderDFrame", "UserForm1") 'Change to match your userforms caption
+    Do While mlHwnd = 0
+        mlHwnd = FindWindow("ThunderDFrame", "UserForm1") 'Change to match your userforms caption
+        DoEvents
+    Loop
+    'Set topmost
+    SetWindowPos mlHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE
+    CommandButton1.Caption = "Not Topmost"
+    'Minimize Excel's main window if you want to present the UserForm as a standard Form not "associated" with Excel.
+    Application.WindowState = xlMinimized
+End Sub
