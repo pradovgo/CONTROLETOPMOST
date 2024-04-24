@@ -1,0 +1,17 @@
+Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hwnd As Long, _
+    ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, _
+    ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
+
+Private Const HWND_TOPMOST = -1
+Private Const SWP_NOMOVE = &H2
+Private Const SWP_NOSIZE = &H1
+
+
+
+Private Sub UserForm_Initialize()
+    UserForm1.Show vbModeless ' Exibe o formulário de forma não modal
+    DoEvents ' Permite que o sistema atualize a interface do usuário
+    While UserForm1.Visible ' Loop enquanto o formulário estiver visível
+        DoEvents ' Permite que o sistema continue respondendo a eventos
+    Wend
+End Sub
