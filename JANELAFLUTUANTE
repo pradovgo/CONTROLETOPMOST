@@ -1,0 +1,125 @@
+Dim LIGADO As Boolean
+
+
+Private Sub UserForm_Initialize()
+    Dim MEDIAPROD As Range
+    Set MEDIAPROD = Sheets("BACKEND").Range("H3")
+    Dim PRODDIA As Range
+    Set PRODDIA = Sheets("BACKEND").Range("H4")
+    MEDIAVALUE = "TMA MÉDIO: " & Format(MEDIAPROD.Value, "mm:ss") & vbCrLf & PRODDIA.Value
+    Me.Label1.Caption = MEDIAVALUE
+    
+End Sub
+Private Sub BTFECHAR_Click()
+    Unload Me
+    Application.EnableCancelKey = xlErrorHandler
+End Sub
+
+
+
+Private Sub BTFIXAR_Click()
+        LIGADO = Not LIGADO
+    If LIGADO Then
+        Call SetXLNormal
+        Call MAXIMIZAR
+        
+    Else
+        Call SetXLOnTop
+        Call MINIMIZAR
+        
+    End If
+End Sub
+
+Private Sub BTREGISTRAR_Click()
+    
+    Call REGISTRAR
+    Dim MEDIAPROD As Range
+    Set MEDIAPROD = Sheets("BACKEND").Range("H3")
+    Dim PRODDIA As Range
+    Set PRODDIA = Sheets("BACKEND").Range("H4")
+    MEDIAVALUE = "TMA MÉDIO: " & Format(MEDIAPROD.Value, "mm:ss") & vbCrLf & PRODDIA.Value
+    Label1.Caption = MEDIAVALUE
+    
+End Sub
+
+Sub AbrirUserForm()
+    CONTROLE.Show vbModeless ' vbModeless torna o UserForm não modal
+End Sub
+
+'Update 20140909
+#If Win64 Then
+    Public Declare PtrSafe Function SetWindowPos _
+        Lib "user32" ( _
+            ByVal hwnd As LongPtr, _
+            ByVal hwndInsertAfter As LongPtr, _
+            ByVal x As Long, ByVal y As Long, _
+            ByVal cx As Long, ByVal cy As Long, _
+            ByVal wFlags As Long) _
+    As Long
+#Else
+    Public Declare Function SetWindowPos _
+        Lib "user32" ( _
+            ByVal hwnd As Long, _
+            ByVal hwndInsertAfter As Long, _
+            ByVal x As Long, ByVal y As Long, _
+            ByVal cx As Long, ByVal cy As Long, _
+            ByVal wFlags As Long) _
+    As Long
+#End If
+Public Const SWP_NOSIZE = &H1
+Public Const SWP_NOMOVE = &H2
+Public Const HWND_TOPMOST = -1
+Public Const HWND_NOTOPMOST = -2
+Sub ShowXLOnTop(ByVal OnTop As Boolean)
+    Dim xStype As Long
+    #If Win64 Then
+        Dim xHwnd As LongPtr
+    #Else
+        Dim xHwnd As Long
+    #End If
+    If OnTop Then
+        xStype = HWND_TOPMOST
+    Else
+        xStype = HWND_NOTOPMOST
+    End If
+    Call SetWindowPos(Application.hwnd, xStype, 0, 0, 0, 0, SWP_NOSIZE Or SWP_NOMOVE)
+End Sub
+Sub SetXLOnTop()
+    ShowXLOnTop True
+End Sub
+Sub SetXLNormal()
+    ShowXLOnTop False
+End Sub
+Sub MINIMIZAR()
+    ' Diminui o tamanho da janela
+    Application.WindowState = xlNormal
+    With Application
+        .WindowState = xlNormal
+        .Width = 50 ' Largura desejada
+        .Height = 50 ' Altura desejada
+    End With
+    
+    
+    ' Move a janela para o canto superior esquerdo da tela
+    With Application.Windows(1)
+        .Left = 1100  ' Posição horizontal
+        .Top = 600 ' Posição vertical
+    End With
+End Sub
+
+Sub MAXIMIZAR()
+    ' Diminui o tamanho da janela
+    Application.WindowState = xlNormal
+    With Application
+        .WindowState = xlNormal
+        .Width = 600 ' Largura desejada
+        .Height = 400 ' Altura desejada
+    End With
+    
+    ' Move a janela para o canto superior esquerdo da tela
+    With Application.Windows(1)
+        .Left = 0 ' Posição horizontal
+        .Top = 0  ' Posição vertical
+    End With
+End Sub
+
